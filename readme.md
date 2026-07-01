@@ -2,9 +2,9 @@
 
 ## Información del Estudiante
 
-- **Nombre:** Josue Xavier Herrera Vera
+- **Nombre:** Kevin Fernando Erazo Delgado
 - **Carrera:** Desarrollo de Software - PuceTec
-- **Fecha de inicio:** 11/06/2026
+- **Fecha de inicio:** 10/06/2026
 
 ---
 
