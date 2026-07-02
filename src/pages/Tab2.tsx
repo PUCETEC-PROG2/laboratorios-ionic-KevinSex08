@@ -1,16 +1,21 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonTextarea, IonButton, useIonViewWillEnter, useIonToast, useIonLoading } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonTextarea, IonButton, useIonToast, useIonLoading } from '@ionic/react';
 import './Tab2.css';
 import { useState } from 'react';
 import { RepositoryPayload } from '../interfaces/RepositoryPayload';
 import React from 'react';
-import { createRepository } from '../services/GithubService';
-import { useHistory } from 'react-router';
+import { createRepository, updateRepository } from '../services/GithubService';
+import { useHistory, useLocation } from 'react-router-dom';
+import { Repository } from '../interfaces/Repository';
 
 const Tab2: React.FC = () => {
   const history = useHistory();
+  const location = useLocation<{ mode?: string; repo?: Repository }>();
   const [presentToast] = useIonToast();
   const [presentLoading, dismissLoading] = useIonLoading();
   
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingRepo, setEditingRepo] = useState<Repository | null>(null);
+
   const [repositoryData, setRepositoryData] = useState<RepositoryPayload>({
     name: "",
     description: ""
@@ -38,55 +43,106 @@ const Tab2: React.FC = () => {
     
     // Present native loading backdrop
     await presentLoading({
-      message: 'Creando repositorio en GitHub...',
+      message: isEditMode ? 'Actualizando repositorio en GitHub...' : 'Creando repositorio en GitHub...',
       spinner: 'circular'
     });
     
     try {
-      await createRepository(repositoryData);
-      
-      // Dismiss loading and present success toast
-      await dismissLoading();
-      presentToast({
-        message: `¡Repositorio "${nameVal}" creado con éxito!`,
-        duration: 2000,
-        color: 'success',
-        position: 'bottom'
-      });
+      if (isEditMode && editingRepo) {
+        await updateRepository(editingRepo.owner.login, editingRepo.name, {
+          name: nameVal,
+          description: repositoryData.description
+        });
+        
+        await dismissLoading();
+        presentToast({
+          message: `¡Repositorio "${nameVal}" actualizado con éxito!`,
+          duration: 2000,
+          color: 'success',
+          position: 'bottom',
+          buttons: [
+            {
+              text: 'Cerrar',
+              role: 'cancel'
+            }
+          ]
+        });
+      } else {
+        await createRepository(repositoryData);
+        
+        // Dismiss loading and present success toast
+        await dismissLoading();
+        presentToast({
+          message: `¡Repositorio "${nameVal}" creado con éxito!`,
+          duration: 2000,
+          color: 'success',
+          position: 'bottom',
+          buttons: [
+            {
+              text: 'Cerrar',
+              role: 'cancel'
+            }
+          ]
+        });
+      }
 
       // Reset form and navigate
       setRepositoryData({
         name: "",
         description: ""
       });
+      setIsEditMode(false);
+      setEditingRepo(null);
       history.push("/tab1");
     } catch (error: any) {
       await dismissLoading();
       
       presentToast({
-        message: `Error al crear el repositorio: ${error.message || error}`,
-        duration: 3500,
+        message: `Error al ${isEditMode ? 'actualizar' : 'crear'} el repositorio: ${error.message || error}`,
+        duration: 4000,
         color: 'danger',
-        position: 'bottom'
+        position: 'bottom',
+        buttons: [
+          {
+            text: 'Cerrar',
+            role: 'cancel'
+          }
+        ]
       });
     }
   };
   
-  useIonViewWillEnter(() => {
+  React.useEffect(() => {
     setValidationErrors({});
-  })
+    const state = location.state;
+    if (state && state.mode === 'edit' && state.repo) {
+      setRepositoryData({
+        name: state.repo.name,
+        description: state.repo.description || ""
+      });
+      setEditingRepo(state.repo);
+      setIsEditMode(true);
+    } else {
+      setRepositoryData({
+        name: "",
+        description: ""
+      });
+      setEditingRepo(null);
+      setIsEditMode(false);
+    }
+  }, [location.state, location.pathname]);
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Crear Repositorio</IonTitle>
+          <IonTitle>{isEditMode ? 'Renombrar Repositorio' : 'Crear Repositorio'}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen className="ion-padding">
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Crear Repositorio</IonTitle>
+            <IonTitle size="large">{isEditMode ? 'Renombrar Repositorio' : 'Crear Repositorio'}</IonTitle>
           </IonToolbar>
         </IonHeader>
 
@@ -131,7 +187,7 @@ const Tab2: React.FC = () => {
             onClick={saveRepo}
             disabled={!!validationErrors.name || repositoryData.name.trim() === ""}
           >
-            Guardar Repositorio
+            {isEditMode ? 'Renombrar Repositorio' : 'Guardar Repositorio'}
           </IonButton>
         </div>
       </IonContent>

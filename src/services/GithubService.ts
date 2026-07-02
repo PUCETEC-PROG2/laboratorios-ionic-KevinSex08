@@ -17,6 +17,29 @@ const githubClient = axios.create({
   },
 });
 
+const extractErrorMessage = (error: any): string => {
+  if (axios.isAxiosError(error) && error.response?.data) {
+    const data = error.response.data;
+    if (data.errors && Array.isArray(data.errors)) {
+      const details = data.errors
+        .map((err: any) => {
+          if (err.message) {
+            if (err.message.includes("already exists")) {
+              return "el nombre del repositorio ya existe en esta cuenta";
+            }
+            return err.message;
+          }
+          return err.code || "";
+        })
+        .filter(Boolean)
+        .join(", ");
+      return details ? `${data.message}: ${details}` : data.message;
+    }
+    return data.message || error.message;
+  }
+  return error.message || String(error);
+};
+
 export const fetchRepositories = async (): Promise<Repository[]> => {
   try {
     const response = await githubClient.get("/user/repos", {
@@ -32,7 +55,7 @@ export const fetchRepositories = async (): Promise<Repository[]> => {
     return response.data;
   } catch (error) {
     console.error("Error al leer repositorios", error);
-    throw new Error((error as Error).message);
+    throw new Error(extractErrorMessage(error));
   }
 };
 
@@ -43,7 +66,7 @@ export const createRepository = async (repository : RepositoryPayload): Promise<
         return response.data as Repository
     } catch (error) {
         console.error("Error al agregar repositorios", error);
-        throw new Error((error as Error).message);
+        throw new Error(extractErrorMessage(error));
     }
 };
     
@@ -55,7 +78,7 @@ export const fetchUserInfo = async (): Promise<GithubUser | null> => {
     return response.data as GithubUser;
   } catch (error) {
     console.error("Error al leer usuario", error);
-    throw new Error((error as Error).message);
+    throw new Error(extractErrorMessage(error));
   }
 };
 
@@ -64,7 +87,7 @@ export const deleteRepository = async (owner: string, repo: string): Promise<voi
     await githubClient.delete(`/repos/${owner}/${repo}`);
   } catch (error) {
     console.error("Error al eliminar el repositorio", error);
-    throw new Error((error as Error).message);
+    throw new Error(extractErrorMessage(error));
   }
 };
 
@@ -78,6 +101,6 @@ export const updateRepository = async (
     return response.data as Repository;
   } catch (error) {
     console.error("Error al actualizar el repositorio", error);
-    throw new Error((error as Error).message);
+    throw new Error(extractErrorMessage(error));
   }
 };

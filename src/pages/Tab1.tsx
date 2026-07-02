@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   IonContent, 
   IonHeader, 
@@ -13,20 +13,17 @@ import {
   RefresherEventDetail,
   useIonAlert,
   useIonToast,
-  useIonLoading,
-  IonModal,
-  IonInput,
-  IonTextarea,
-  IonButton,
-  IonButtons
+  useIonLoading
 } from '@ionic/react';
 import './Tab1.css';
 import RepoItem from '../components/RepoItem';
 import { Repository } from '../interfaces/Repository';
-import { fetchRepositories, deleteRepository, updateRepository } from '../services/GithubService';
+import { fetchRepositories, deleteRepository } from '../services/GithubService';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { useHistory } from 'react-router-dom';
 
 const Tab1: React.FC = () => {
+  const history = useHistory();
   const [repositoryList, setRepositoryList] = React.useState<Repository[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [errorMsg, setErrorMsg] = React.useState("");
@@ -35,12 +32,6 @@ const Tab1: React.FC = () => {
   const [presentAlert] = useIonAlert();
   const [presentToast] = useIonToast();
   const [presentLoading, dismissLoading] = useIonLoading();
-
-  // Edit Modal State
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedRepo, setSelectedRepo] = useState<Repository | null>(null);
-  const [editData, setEditData] = useState({ name: "", description: "" });
-  const [validationErrors, setValidationErrors] = useState<{ name?: string }>({});
 
   const loadRepos = async () => {
     setLoading(true);
@@ -90,7 +81,13 @@ const Tab1: React.FC = () => {
                 message: `El repositorio "${name}" ha sido eliminado.`,
                 duration: 2000,
                 color: 'success',
-                position: 'bottom'
+                position: 'bottom',
+                buttons: [
+                  {
+                    text: 'Cerrar',
+                    role: 'cancel'
+                  }
+                ]
               });
               // Reload list
               loadRepos();
@@ -98,9 +95,15 @@ const Tab1: React.FC = () => {
               await dismissLoading();
               presentToast({
                 message: `Error al eliminar el repositorio: ${err.message}`,
-                duration: 3500,
+                duration: 4000,
                 color: 'danger',
-                position: 'bottom'
+                position: 'bottom',
+                buttons: [
+                  {
+                    text: 'Cerrar',
+                    role: 'cancel'
+                  }
+                ]
               });
             }
           }
@@ -109,71 +112,9 @@ const Tab1: React.FC = () => {
     });
   };
 
-  // 2. EDIT Modal Opening
+  // 2. EDIT Navigation
   const handleEditInit = (repo: Repository) => {
-    setSelectedRepo(repo);
-    setEditData({
-      name: repo.name,
-      description: repo.description || ""
-    });
-    setValidationErrors({});
-    setIsEditModalOpen(true);
-  };
-
-  // 3. EDIT Save Flow
-  const handleSaveEdit = async () => {
-    if (!selectedRepo) return;
-
-    let nameError = "";
-    const nameVal = editData.name.trim();
-
-    if (nameVal === "") {
-      nameError = "El nombre del repositorio es obligatorio.";
-    } else if (/\s/.test(editData.name)) {
-      nameError = "El nombre no puede contener espacios (usa '-' o '_').";
-    } else if (nameVal.length < 3) {
-      nameError = "El nombre debe tener al menos 3 caracteres.";
-    }
-
-    if (nameError) {
-      setValidationErrors({ name: nameError });
-      return;
-    }
-
-    setValidationErrors({});
-    setIsEditModalOpen(false);
-
-    await presentLoading({
-      message: 'Actualizando repositorio en GitHub...',
-      spinner: 'circular'
-    });
-
-    try {
-      // API call to PATCH /repos/{owner}/{repo} where repo is the original name
-      await updateRepository(selectedRepo.owner.login, selectedRepo.name, {
-        name: nameVal,
-        description: editData.description
-      });
-
-      await dismissLoading();
-      presentToast({
-        message: '¡Repositorio actualizado con éxito!',
-        duration: 2000,
-        color: 'success',
-        position: 'bottom'
-      });
-      
-      // Reload list
-      loadRepos();
-    } catch (err: any) {
-      await dismissLoading();
-      presentToast({
-        message: `Error al actualizar el repositorio: ${err.message}`,
-        duration: 3500,
-        color: 'danger',
-        position: 'bottom'
-      });
-    }
+    history.push('/tab2', { mode: 'edit', repo });
   };
 
   useIonViewWillEnter(() => {
@@ -216,65 +157,6 @@ const Tab1: React.FC = () => {
             <p>{errorMsg}</p>
           </IonText>
         )}
-
-        {/* Edit Repository Modal */}
-        <IonModal isOpen={isEditModalOpen} onDidDismiss={() => setIsEditModalOpen(false)}>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>Editar Repositorio</IonTitle>
-              <IonButtons slot="end">
-                <IonButton onClick={() => setIsEditModalOpen(false)}>Cerrar</IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent className="ion-padding">
-            <div className="modal-form-container">
-              <IonInput 
-                className={`form-field ${validationErrors.name ? 'ion-invalid ion-touched' : ''}`}
-                label="Nombre del repositorio *"
-                labelPlacement="floating"
-                placeholder="Nombre del repositorio"
-                value={editData.name}
-                onIonInput={(e) => {
-                  const val = e.detail.value || "";
-                  setEditData({...editData, name: val});
-                  
-                  // Validación en tiempo real
-                  let err = "";
-                  if (val.trim() === "") {
-                    err = "El nombre del repositorio es obligatorio.";
-                  } else if (/\s/.test(val)) {
-                    err = "El nombre no puede contener espacios (usa '-' o '_').";
-                  } else if (val.trim().length < 3) {
-                    err = "El nombre debe tener al menos 3 caracteres.";
-                  }
-                  setValidationErrors(prev => ({...prev, name: err}));
-                }}
-                errorText={validationErrors.name}
-                required
-              />
-              <IonTextarea
-                className="form-field"
-                label="Descripción"
-                labelPlacement="floating"
-                placeholder="Ingrese la descripción del repositorio"
-                value={editData.description}
-                onIonChange={(e) => setEditData({...editData, description: e.detail.value!})}
-                rows={4}
-              />
-              <IonButton
-                className="form-field gradient-btn"
-                expand="block"
-                shape="round"
-                onClick={handleSaveEdit}
-                disabled={!!validationErrors.name || editData.name.trim() === ""}
-              >
-                Guardar Cambios
-              </IonButton>
-            </div>
-          </IonContent>
-        </IonModal>
-
       </IonContent>
     </IonPage>
   );
