@@ -1,2 +1,190 @@
-/* For information on how to create your own theme, please refer to:
-http://ionicframework.com/docs/theming/ */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Use Google Fonts 'Outfit' universally */
+  --ion-font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Roboto", sans-serif;
+
+  /* Primary Color - Vibrant Purple/Violet */
+  --ion-color-primary: #a855f7;
+  --ion-color-primary-rgb: 168, 85, 247;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #943ee6;
+  --ion-color-primary-tint: #b166f8;
+
+  /* Secondary Color - Neon Pink/Magenta */
+  --ion-color-secondary: #f72585;
+  --ion-color-secondary-rgb: 247, 37, 133;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #d92176;
+  --ion-color-secondary-tint: #f83b91;
+
+  /* Tertiary Color - Deep Violet Blue */
+  --ion-color-tertiary: #7209b7;
+  --ion-color-tertiary-rgb: 114, 9, 183;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #6408a1;
+  --ion-color-tertiary-tint: #8022be;
+
+  /* Basic functional colors optimized for dark mode */
+  --ion-color-success: #10b981;
+  --ion-color-success-rgb: 16, 185, 129;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #0e9f6e;
+  --ion-color-success-tint: #34d399;
+
+  --ion-color-warning: #fbbf24;
+  --ion-color-warning-rgb: 251, 191, 36;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #d97706;
+  --ion-color-warning-tint: #fcd34d;
+
+  --ion-color-danger: #f43f5e;
+  --ion-color-danger-rgb: 244, 63, 94;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #e11d48;
+  --ion-color-danger-tint: #fb7185;
+
+  --ion-color-light: #f3f0f7;
+  --ion-color-light-rgb: 243, 240, 247;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #dcd8e3;
+  --ion-color-light-tint: #f6f4fa;
+
+  --ion-color-medium: #a78bfa;
+  --ion-color-medium-rgb: 167, 139, 250;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #8b5cf6;
+  --ion-color-medium-tint: #c084fc;
+
+  --ion-color-dark: #0f0c1b;
+  --ion-color-dark-rgb: 15, 12, 27;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #0d0a18;
+  --ion-color-dark-tint: #1c1830;
+}
+
+/* Force Dark Theme Variables */
+body, html, :root {
+  --ion-background-color: #08060f;
+  --ion-background-color-rgb: 8, 6, 15;
+
+  --ion-text-color: #f3f0fc;
+  --ion-text-color-rgb: 243, 240, 252;
+
+  --ion-border-color: rgba(168, 85, 247, 0.15);
+
+  --ion-card-background: #140f28;
+  --ion-item-background: #140f28;
+
+  --ion-toolbar-background: rgba(8, 6, 15, 0.8) !important;
+  --ion-toolbar-border-color: rgba(168, 85, 247, 0.15);
+
+  --ion-tab-bar-background: rgba(8, 6, 15, 0.8) !important;
+  --ion-tab-bar-border-color: rgba(168, 85, 247, 0.15);
+}
+
+/* Global Elements Redesign */
+ion-toolbar {
+  --background: rgba(8, 6, 15, 0.8) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.15);
+  padding: 6px 12px;
+}
+
+ion-title {
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #a855f7 0%, #f72585 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+ion-tab-bar {
+  --background: rgba(8, 6, 15, 0.8) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(168, 85, 247, 0.15);
+  box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.4);
+}
+
+ion-tab-button {
+  --color-selected: #f72585 !important;
+  --color: #a78bfa !important;
+  transition: all 0.3s ease;
+}
+
+/* Glassmorphism panel helper */
+.glass-panel {
+  background: rgba(20, 15, 40, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Beautiful Gradients and Glowing Utilities */
+.gradient-btn {
+  --background: linear-gradient(135deg, #a855f7 0%, #f72585 100%) !important;
+  --background-hover: linear-gradient(135deg, #b166f8 0%, #f83b91 100%) !important;
+  --border-radius: 28px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(247, 37, 133, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gradient-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(247, 37, 133, 0.5);
+}
+
+.gradient-btn:active {
+  transform: translateY(1px);
+}
+
+/* Custom cards styling */
+ion-card {
+  border-radius: 16px !important;
+  border: 1px solid rgba(168, 85, 247, 0.15) !important;
+  background: linear-gradient(135deg, rgba(20, 15, 40, 0.9) 0%, rgba(13, 10, 26, 0.9) 100%) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35) !important;
+  margin: 16px 0 !important;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+ion-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(247, 37, 133, 0.4) !important;
+  box-shadow: 0 15px 35px rgba(168, 85, 247, 0.2) !important;
+}
+
+/* Custom inputs styling */
+ion-input, ion-textarea {
+  --background: rgba(13, 10, 26, 0.6) !important;
+  --border-color: rgba(168, 85, 247, 0.25) !important;
+  --border-radius: 12px !important;
+  --padding-start: 16px !important;
+  --padding-end: 16px !important;
+  margin-bottom: 8px;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+ion-input.ion-focused, ion-textarea.ion-focused {
+  border-color: #f72585 !important;
+  box-shadow: 0 0 10px rgba(247, 37, 133, 0.25);
+}

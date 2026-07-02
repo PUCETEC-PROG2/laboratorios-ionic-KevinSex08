@@ -12,7 +12,7 @@ const GITHUB_API_TOKEN =
 const githubClient = axios.create({
   baseURL: GITHUB_API_URL,
   headers: {
-    Authorization: `Bearer TU_TOKEN_AQUÍ`,
+    Authorization: `Bearer ${GITHUB_API_TOKEN}`,
     Accept: "application/vnd.github.v3+json",
   },
 });
@@ -24,7 +24,7 @@ export const fetchRepositories = async (): Promise<Repository[]> => {
         per_page: 100,
         sort: "created",
         direction: "desc",
-        affiliation: "owner",
+        affiliation: "owner,collaborator,organization_member",
         t: Date.now()
       },
     });
@@ -55,6 +55,29 @@ export const fetchUserInfo = async (): Promise<GithubUser | null> => {
     return response.data as GithubUser;
   } catch (error) {
     console.error("Error al leer usuario", error);
+    throw new Error((error as Error).message);
+  }
+};
+
+export const deleteRepository = async (owner: string, repo: string): Promise<void> => {
+  try {
+    await githubClient.delete(`/repos/${owner}/${repo}`);
+  } catch (error) {
+    console.error("Error al eliminar el repositorio", error);
+    throw new Error((error as Error).message);
+  }
+};
+
+export const updateRepository = async (
+  owner: string,
+  repo: string,
+  payload: { name: string; description?: string }
+): Promise<Repository> => {
+  try {
+    const response = await githubClient.patch(`/repos/${owner}/${repo}`, payload);
+    return response.data as Repository;
+  } catch (error) {
+    console.error("Error al actualizar el repositorio", error);
     throw new Error((error as Error).message);
   }
 };

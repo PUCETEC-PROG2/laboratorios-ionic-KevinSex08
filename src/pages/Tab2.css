@@ -1,13 +1,35 @@
+/* Center container and style background */
 .form-container {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 32px;
-    padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  padding: 32px 24px;
+  background: rgba(20, 15, 40, 0.4);
+  border-radius: 24px;
+  border: 1px solid rgba(168, 85, 247, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  max-width: 480px;
+  margin: 40px auto;
 }
 
+/* Form fields width setting */
 .form-field {
-    width: 100%;
+  width: 100%;
+}
+
+/* Input text and placeholder settings */
+ion-input, ion-textarea {
+  --color: #ffffff !important;
+  --placeholder-color: #a78bfa !important;
+  --placeholder-opacity: 0.65 !important;
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Custom background for the whole page */
+ion-content {
+  --background: radial-gradient(circle at center, #130f26 0%, #08060f 100%) !important;
 }

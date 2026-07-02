@@ -1,18 +1,85 @@
+/* Container padding and alignment */
 .card-container {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 32px;
-    padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  padding: 24px;
 }
 
+/* Redesign the user card */
 .card {
-    width: 100%;
-    max-width: 400px;
+  width: 100%;
+  max-width: 380px;
+  background: linear-gradient(135deg, rgba(20, 15, 40, 0.9) 0%, rgba(13, 10, 26, 0.9) 100%) !important;
+  border: 1px solid rgba(168, 85, 247, 0.2) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.45) !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px 28px 20px !important;
+  text-align: center;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
 }
 
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(247, 37, 133, 0.4) !important;
+  box-shadow: 0 20px 45px rgba(168, 85, 247, 0.2) !important;
+}
+
+/* User avatar circular styling */
 .card img {
-    padding: 16px;
+  width: 130px !important;
+  height: 130px !important;
+  border-radius: 50% !important;
+  border: 3px solid #f72585; /* Glowing neon pink border */
+  box-shadow: 0 0 20px rgba(247, 37, 133, 0.3);
+  padding: 4px;
+  background: rgba(8, 6, 15, 0.8);
+  object-fit: cover;
+  margin-bottom: 16px;
+  transition: transform 0.4s ease;
+}
+
+.card img:hover {
+  transform: rotate(5deg) scale(1.05);
+}
+
+/* Header text overrides */
+ion-card-header {
+  padding: 0 !important;
+  margin-bottom: 12px;
+}
+
+ion-card-title {
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin-bottom: 4px !important;
+  letter-spacing: 0.5px;
+}
+
+ion-card-subtitle {
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  color: #a855f7 !important; /* purple subtitle */
+  text-transform: lowercase;
+  letter-spacing: 0.5px;
+}
+
+/* Content block */
+ion-card-content {
+  padding: 0 !important;
+  margin-top: 8px;
+}
+
+ion-card-content p {
+  color: #a78bfa !important;
+  font-size: 0.92rem !important;
+  line-height: 1.5 !important;
+  font-weight: 400;
 }

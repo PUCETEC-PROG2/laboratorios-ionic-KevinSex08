@@ -1,87 +1,139 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar,IonInput, IonTextarea, IonButton, IonText, useIonViewWillEnter } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonInput, IonTextarea, IonButton, useIonViewWillEnter, useIonToast, useIonLoading } from '@ionic/react';
 import './Tab2.css';
 import { useState } from 'react';
 import { RepositoryPayload } from '../interfaces/RepositoryPayload';
 import React from 'react';
 import { createRepository } from '../services/GithubService';
 import { useHistory } from 'react-router';
-import LoadingSpinner from '../components/LoadingSpinner';
 
 const Tab2: React.FC = () => {
   const history = useHistory();
+  const [presentToast] = useIonToast();
+  const [presentLoading, dismissLoading] = useIonLoading();
+  
   const [repositoryData, setRepositoryData] = useState<RepositoryPayload>({
     name: "",
     description: ""
   });
-  const [loading, setLoading] = React.useState(false);
-  const [errorMsg, setErrorMsg] = React.useState("");
+  const [validationErrors, setValidationErrors] = useState<{ name?: string }>({});
 
   const saveRepo = async() => {
-    if(repositoryData.name.trim() == ''){
-      setErrorMsg("El nombre del repositorio es obligatio");
+    let nameError = "";
+    const nameVal = repositoryData.name.trim();
+
+    if (nameVal === "") {
+      nameError = "El nombre del repositorio es obligatorio.";
+    } else if (/\s/.test(repositoryData.name)) {
+      nameError = "El nombre no puede contener espacios (usa '-' o '_').";
+    } else if (nameVal.length < 3) {
+      nameError = "El nombre debe tener al menos 3 caracteres.";
+    }
+
+    if (nameError) {
+      setValidationErrors({ name: nameError });
       return;
     }
-    setLoading(true);
-    createRepository(repositoryData)
-      .then(() => history.push("/tab1"))
-      .catch((error) => setErrorMsg("Error  al cargar repositorio." + error))
-      .finally(() => {
-        setLoading(false);
-        setRepositoryData({
-          name: "",
-          description: ""
-        });
-      })
+
+    setValidationErrors({});
+    
+    // Present native loading backdrop
+    await presentLoading({
+      message: 'Creando repositorio en GitHub...',
+      spinner: 'circular'
+    });
+    
+    try {
+      await createRepository(repositoryData);
+      
+      // Dismiss loading and present success toast
+      await dismissLoading();
+      presentToast({
+        message: `¡Repositorio "${nameVal}" creado con éxito!`,
+        duration: 2000,
+        color: 'success',
+        position: 'bottom'
+      });
+
+      // Reset form and navigate
+      setRepositoryData({
+        name: "",
+        description: ""
+      });
+      history.push("/tab1");
+    } catch (error: any) {
+      await dismissLoading();
+      
+      presentToast({
+        message: `Error al crear el repositorio: ${error.message || error}`,
+        duration: 3500,
+        color: 'danger',
+        position: 'bottom'
+      });
+    }
   };
   
   useIonViewWillEnter(() => {
-    setErrorMsg("");
+    setValidationErrors({});
   })
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Formulario de repo</IonTitle>
+          <IonTitle>Crear Repositorio</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent fullscreen className="ion-padding">
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Formulario de repo</IonTitle>
+            <IonTitle size="large">Crear Repositorio</IonTitle>
           </IonToolbar>
         </IonHeader>
 
         <div className="form-container">
           <IonInput 
-            className = "form-field"
-            label="Nombre del repositorio"
+            className={`form-field ${validationErrors.name ? 'ion-invalid ion-touched' : ''}`}
+            label="Nombre del repositorio *"
             labelPlacement="floating"
-            placeholder="Ingrese el nombre del repositorio"
+            placeholder="Ejemplo: mi-proyecto-ionic"
             value={repositoryData.name}
-            onIonChange={(e) => setRepositoryData({...repositoryData, name: e.detail.value!})}
+            onIonInput={(e) => {
+              const val = e.detail.value || "";
+              setRepositoryData({...repositoryData, name: val});
+              
+              // Validación en tiempo real
+              let err = "";
+              if (val.trim() === "") {
+                err = "El nombre del repositorio es obligatorio.";
+              } else if (/\s/.test(val)) {
+                err = "El nombre no puede contener espacios (usa '-' o '_').";
+              } else if (val.trim().length < 3) {
+                err = "El nombre debe tener al menos 3 caracteres.";
+              }
+              setValidationErrors(prev => ({...prev, name: err}));
+            }}
+            errorText={validationErrors.name}
+            required
           />
           <IonTextarea
-            className = "form-field"
-            label="Descripcion del repositorio"
+            className="form-field"
+            label="Descripción"
             labelPlacement="floating"
-            placeholder="Ingrese el descripcion del repositorio"
+            placeholder="Ingrese la descripción del repositorio"
             value={repositoryData.description}
             onIonChange={(e) => setRepositoryData({...repositoryData, description: e.detail.value!})}
-            rows={6}
+            rows={4}
           />
-          {errorMsg != "" && <IonText color="danger">{errorMsg}</IonText>}
           <IonButton
-            className = "form-field"
+            className="form-field gradient-btn"
             expand="block"
             shape="round"
-            color="primary"
             onClick={saveRepo}
+            disabled={!!validationErrors.name || repositoryData.name.trim() === ""}
           >
-            Guardar
+            Guardar Repositorio
           </IonButton>
         </div>
-        {loading && <LoadingSpinner />}
       </IonContent>
     </IonPage>
   );

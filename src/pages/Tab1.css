@@ -1,0 +1,66 @@
+/* List styling */
+ion-list {
+  background: transparent !important;
+  padding: 0 !important;
+  margin-top: 12px;
+}
+
+/* Custom refresher spinner color and alignment */
+ion-refresher {
+  z-index: 99;
+}
+
+ion-refresher-content {
+  --color: #f72585 !important;
+}
+
+/* Modal wrapper design */
+ion-modal {
+  --background: rgba(8, 6, 15, 0.95) !important;
+  --backdrop-opacity: 0.75;
+}
+
+ion-modal ion-toolbar {
+  --background: rgba(20, 15, 40, 0.85) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+ion-modal ion-content {
+  --background: radial-gradient(circle at top left, #140f28 0%, #08060f 100%) !important;
+}
+
+/* Modal Form Container card styling */
+.modal-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 28px 24px;
+  background: rgba(20, 15, 40, 0.5);
+  border-radius: 20px;
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  margin-top: 24px;
+}
+
+/* Form fields customization inside modal */
+.form-field {
+  --color: #ffffff !important;
+  --placeholder-color: #a78bfa !important;
+  --placeholder-opacity: 0.6 !important;
+}
+
+/* Error message formatting */
+ion-text[color="danger"] p {
+  background: rgba(244, 63, 94, 0.1);
+  border-left: 3px solid #f43f5e;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #f43f5e !important;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-top: 12px;
+}

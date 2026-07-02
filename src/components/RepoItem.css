@@ -1,0 +1,143 @@
+/* main card item */
+.repo-card-item {
+  --background: linear-gradient(135deg, rgba(22, 18, 43, 0.85) 0%, rgba(13, 10, 26, 0.85) 100%) !important;
+  --border-color: rgba(168, 85, 247, 0.15) !important;
+  --inner-padding-end: 16px !important;
+  --padding-start: 16px !important;
+  
+  border: 1px solid rgba(168, 85, 247, 0.18);
+  border-left: 5px solid #a855f7; /* vibrant purple accent border */
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+  margin: 16px 0px;
+}
+
+.repo-card-item:hover {
+  border-color: rgba(247, 37, 133, 0.4);
+  border-left-color: #f72585; /* changes to vibrant pink on hover */
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 12px 30px rgba(168, 85, 247, 0.2);
+}
+
+/* avatar circular thumbnail */
+.repo-card-item ion-thumbnail {
+  --border-radius: 50% !important;
+  width: 48px !important;
+  height: 48px !important;
+  border: 2px solid rgba(247, 37, 133, 0.4);
+  background: rgba(13, 10, 26, 0.5);
+  padding: 2px;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 12px;
+  box-shadow: 0 0 10px rgba(247, 37, 133, 0.2);
+}
+
+.repo-card-item ion-thumbnail img {
+  border-radius: 50% !important;
+  object-fit: cover;
+}
+
+/* titles and description styling */
+.repo-card-item h3 {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  margin: 0 0 6px 0 !important;
+  letter-spacing: 0.3px;
+  background: linear-gradient(135deg, #ffffff 30%, #f3f0fc 100%);
+  -webkit-background-clip: text;
+}
+
+.repo-card-item p {
+  color: #a78bfa !important; /* purple tint text */
+  font-size: 0.88rem !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+}
+
+/* language pill badge */
+.lang-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(247, 37, 133, 0.2) 100%);
+  border: 1px solid rgba(247, 37, 133, 0.4);
+  color: #f72585 !important;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.72rem !important;
+  font-weight: 700;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  box-shadow: 0 2px 8px rgba(247, 37, 133, 0.15);
+}
+
+/* Action buttons container */
+.repo-action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-left: 12px;
+  align-self: center;
+}
+
+/* Edit action button */
+.edit-btn {
+  --background: rgba(168, 85, 247, 0.15) !important;
+  --color: #a855f7 !important;
+  --border-radius: 50% !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 50%;
+  margin: 0 !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.edit-btn::part(native) {
+  border-radius: 50%;
+}
+
+.edit-btn:hover {
+  --background: #a855f7 !important;
+  --color: #ffffff !important;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.45);
+}
+
+/* Delete action button */
+.delete-btn {
+  --background: rgba(244, 63, 94, 0.15) !important;
+  --color: #f43f5e !important;
+  --border-radius: 50% !important;
+  --padding-start: 0 !important;
+  --padding-end: 0 !important;
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  border-radius: 50%;
+  margin: 0 !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.delete-btn::part(native) {
+  border-radius: 50%;
+}
+
+.delete-btn:hover {
+  --background: #f43f5e !important;
+  --color: #ffffff !important;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.45);
+}

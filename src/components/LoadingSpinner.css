@@ -7,9 +7,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgb(255, 244, 35);
+    background-color: rgba(8, 6, 15, 0.7); /* dark translucent overlay */
+    backdrop-filter: blur(8px); /* smooth glass blur */
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
 }
+
 .loading-spinner {
+    --color: #f72585 !important; /* neon pink spinner to match the theme */
     width: 64px;
     height: 64px;
 }
